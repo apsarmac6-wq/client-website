@@ -1,44 +1,27 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "./lib/supabase/client";
+
+type Product = {
+  id: string;
+  name: string;
+  name_ne: string | null;
+  category: string;
+  price: number;
+  discount_price: number | null;
+  description: string | null;
+  description_ne: string | null;
+  is_published: boolean;
+  availability: string;
+  product_images: {
+    image_url: string;
+    alt_text: string | null;
+  }[];
+};
 
 const phone = "9779769713777";
-
-const products = [
-  {
-    name: "Traditional Wooden Sofa",
-    nepali: "परम्परागत काठको सोफा",
-    category: "Sofa",
-    price: 65000,
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900",
-  },
-  {
-    name: "Classic Wooden Bed",
-    nepali: "क्लासिक काठको पलङ",
-    category: "Bed",
-    price: 45000,
-    image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900",
-  },
-  {
-    name: "Wooden Dining Table",
-    nepali: "काठको डाइनिङ टेबल",
-    category: "Dining",
-    price: 32000,
-    image:
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=900",
-  },
-  {
-    name: "Modern Wooden Wardrobe",
-    nepali: "आधुनिक काठको दराज",
-    category: "Wardrobe",
-    price: 38000,
-    image:
-      "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=900",
-  },
-];
 
 const categories = [
   { en: "Sofas", ne: "सोफा", icon: "🛋️" },
@@ -51,13 +34,55 @@ const categories = [
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "ne">("en");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [productError, setProductError] = useState("");
 
   const nepali = language === "ne";
+
+  useEffect(() => {
+    async function loadProducts() {
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          id,
+          name,
+          name_ne,
+          category,
+          price,
+          discount_price,
+          description,
+          description_ne,
+          is_published,
+          availability,
+          product_images (
+            image_url,
+            alt_text
+          )
+        `)
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Product loading error:", error);
+        setProductError(error.message);
+      } else {
+        setProducts((data || []) as Product[]);
+      }
+
+      setLoading(false);
+    }
+
+    loadProducts();
+  }, []);
 
   const whatsapp = (product?: string) => {
     const message = product
       ? `Namaste! I am interested in ${product}. Please provide more details.`
       : "Namaste! I would like to know more about Langxong Furniture Udhyog.";
+
     window.open(
       `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
       "_blank"
@@ -66,6 +91,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#faf7f0] text-[#33251c]">
+
       {/* NAVIGATION */}
       <nav className="sticky top-0 z-50 border-b border-[#e8ddce] bg-[#faf7f0]/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
@@ -79,18 +105,10 @@ export default function Home() {
           </a>
 
           <div className="hidden items-center gap-7 text-sm font-medium md:flex">
-            <a href="#home" className="hover:text-[#a16d3e]">
-              {nepali ? "गृहपृष्ठ" : "Home"}
-            </a>
-            <a href="#products" className="hover:text-[#a16d3e]">
-              {nepali ? "उत्पादनहरू" : "Products"}
-            </a>
-            <a href="#about" className="hover:text-[#a16d3e]">
-              {nepali ? "हाम्रो बारेमा" : "About"}
-            </a>
-            <a href="#contact" className="hover:text-[#a16d3e]">
-              {nepali ? "सम्पर्क" : "Contact"}
-            </a>
+            <a href="#home">{nepali ? "गृहपृष्ठ" : "Home"}</a>
+            <a href="#products">{nepali ? "उत्पादनहरू" : "Products"}</a>
+            <a href="#about">{nepali ? "हाम्रो बारेमा" : "About"}</a>
+            <a href="#contact">{nepali ? "सम्पर्क" : "Contact"}</a>
           </div>
 
           <div className="flex items-center gap-3">
@@ -100,6 +118,7 @@ export default function Home() {
             >
               {nepali ? "EN" : "नेपाली"}
             </button>
+
             <button
               onClick={() => whatsapp()}
               className="hidden rounded-full bg-[#65432c] px-4 py-2 text-sm text-white sm:block"
@@ -138,16 +157,11 @@ export default function Home() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
-              <a
-                href="#products"
-                className="rounded-full bg-[#d3ad7c] px-7 py-4 font-semibold text-[#302014] transition hover:bg-white"
-              >
+              <a href="#products" className="rounded-full bg-[#d3ad7c] px-7 py-4 font-semibold text-[#302014]">
                 {nepali ? "फर्निचर हेर्नुहोस्" : "Explore Furniture"}
               </a>
-              <button
-                onClick={() => whatsapp()}
-                className="rounded-full border border-white px-7 py-4 font-semibold transition hover:bg-white hover:text-[#302014]"
-              >
+
+              <button onClick={() => whatsapp()} className="rounded-full border border-white px-7 py-4 font-semibold text-white">
                 {nepali ? "सम्पर्क गर्नुहोस्" : "Contact Us"}
               </button>
             </div>
@@ -164,12 +178,14 @@ export default function Home() {
               {nepali ? "वर्षको अनुभव" : "Years of Experience"}
             </p>
           </div>
+
           <div>
             <p className="text-3xl font-bold text-[#70482b]">✦</p>
             <p className="mt-2 text-sm text-gray-600">
               {nepali ? "गुणस्तरीय सामग्री" : "Quality Materials"}
             </p>
           </div>
+
           <div>
             <p className="text-3xl font-bold text-[#70482b]">✓</p>
             <p className="mt-2 text-sm text-gray-600">
@@ -185,13 +201,14 @@ export default function Home() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
             Explore Our Collection
           </p>
+
           <h2 className="mt-3 text-3xl font-bold">
             {nepali ? "हाम्रा फर्निचरका प्रकारहरू" : "Shop By Category"}
           </h2>
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {categories.map((category) => (
+          {categories.map(category => (
             <a
               href="#products"
               key={category.en}
@@ -206,67 +223,117 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRODUCTS */}
+      {/* PRODUCTS FROM SUPABASE */}
       <section id="products" className="bg-[#f0e9de] py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
-                Our Collection
-              </p>
-              <h2 className="mt-3 text-3xl font-bold">
-                {nepali ? "विशेष फर्निचरहरू" : "Featured Furniture"}
-              </h2>
-            </div>
-            <span className="text-sm text-gray-600">
-              {nepali ? "हाम्रो संग्रह हेर्नुहोस्" : "Discover our collection"}
-            </span>
+          <div className="mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
+              Our Collection
+            </p>
+
+            <h2 className="mt-3 text-3xl font-bold">
+              {nepali ? "हाम्रा फर्निचरहरू" : "Our Furniture Collection"}
+            </h2>
           </div>
 
-          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            {products.map((product) => (
-              <article
-                key={product.name}
-                className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="h-64 overflow-hidden bg-[#e6ded2]">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition duration-500 hover:scale-105"
-                  />
-                </div>
+          {loading ? (
+            <p className="py-12 text-center text-gray-600">
+              {nepali ? "फर्निचर लोड हुँदैछ..." : "Loading furniture..."}
+            </p>
+          ) : productError ? (
+            <p className="rounded-xl bg-white p-6 text-center text-red-600">
+              {productError}
+            </p>
+          ) : products.length === 0 ? (
+            <p className="rounded-xl bg-white p-12 text-center text-gray-600">
+              {nepali
+                ? "हाल कुनै फर्निचर प्रकाशित गरिएको छैन।"
+                : "No furniture has been published yet."}
+            </p>
+          ) : (
+            <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+              {products.map(product => {
+                const firstImage = product.product_images?.[0];
 
-                <div className="p-5">
-                  <p className="text-xs uppercase tracking-wider text-[#a27c55]">
-                    {product.category}
-                  </p>
-                  <h3 className="mt-2 text-lg font-bold">
-                    {nepali ? product.nepali : product.name}
-                  </h3>
-
-                  <p className="mt-3 text-xl font-bold text-[#70482b]">
-                    Rs. {product.price.toLocaleString("en-IN")}
-                  </p>
-
-                  <button
-                    onClick={() =>
-                      whatsapp(nepali ? product.nepali : product.name)
-                    }
-                    className="mt-5 w-full rounded-full bg-[#65432c] py-3 text-sm font-semibold text-white transition hover:bg-[#3f291a]"
+                return (
+                  <article
+                    key={product.id}
+                    className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                   >
-                    {nepali ? "WhatsApp मा सोध्नुहोस्" : "Inquire on WhatsApp"}
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                    <div className="h-64 overflow-hidden bg-[#e6ded2]">
+                      {firstImage ? (
+                        <img
+                          src={firstImage.image_url}
+                          alt={firstImage.alt_text || product.name}
+                          className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-gray-500">
+                          {nepali ? "तस्बिर उपलब्ध छैन" : "No image available"}
+                        </div>
+                      )}
+                    </div>
 
-          <p className="mt-8 text-center text-xs text-gray-600">
-            {nepali
-              ? "नोट: यी परीक्षणका लागि राखिएका नमूना मूल्यहरू हुन्।"
-              : "Demo prices and sample products. Actual inventory and prices will be added by the store owner."}
-          </p>
+                    <div className="p-5">
+                      <p className="text-xs uppercase tracking-wider text-[#a27c55]">
+                        {product.category.replaceAll("_", " ")}
+                      </p>
+
+                      <h3 className="mt-2 text-lg font-bold">
+                        {nepali && product.name_ne
+                          ? product.name_ne
+                          : product.name}
+                      </h3>
+
+                      {product.description && (
+                        <p className="mt-2 line-clamp-2 text-sm text-gray-600">
+                          {nepali && product.description_ne
+                            ? product.description_ne
+                            : product.description}
+                        </p>
+                      )}
+
+                      <div className="mt-3">
+                        {product.discount_price !== null ? (
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xl font-bold text-[#70482b]">
+                              Rs. {Number(product.discount_price).toLocaleString("en-IN")}
+                            </span>
+                            <span className="text-sm text-gray-500 line-through">
+                              Rs. {Number(product.price).toLocaleString("en-IN")}
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-xl font-bold text-[#70482b]">
+                            Rs. {Number(product.price).toLocaleString("en-IN")}
+                          </p>
+                        )}
+                      </div>
+
+                      <p className="mt-2 text-xs text-gray-500">
+                        {product.availability === "available"
+                          ? (nepali ? "उपलब्ध" : "Available")
+                          : product.availability === "out_of_stock"
+                            ? (nepali ? "स्टकमा छैन" : "Out of Stock")
+                            : (nepali ? "अर्डर अनुसार तयार गरिने" : "Made to Order")}
+                      </p>
+
+                      <button
+                        onClick={() =>
+                          whatsapp(nepali && product.name_ne
+                            ? product.name_ne
+                            : product.name)
+                        }
+                        className="mt-5 w-full rounded-full bg-[#65432c] py-3 text-sm font-semibold text-white transition hover:bg-[#3f291a]"
+                      >
+                        {nepali ? "WhatsApp मा सोध्नुहोस्" : "Inquire on WhatsApp"}
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -284,18 +351,18 @@ export default function Home() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
             About Our Business
           </p>
+
           <h2 className="mt-4 text-4xl font-bold leading-tight">
             {nepali ? "हाम्रो परिचय" : "Craftsmanship You Can Trust"}
           </h2>
+
           <p className="mt-6 leading-8 text-gray-600">
             {nepali
               ? "Langxong Furniture Udhyog खाँदबारी, संखुवासभामा रहेको फर्निचर उद्योग हो। करिब ८ वर्षको अनुभवका साथ हामी गुणस्तरीय फर्निचर तथा ग्राहकको आवश्यकता अनुसारका डिजाइनहरू प्रदान गर्ने लक्ष्य राख्छौँ।"
               : "Langxong Furniture Udhyog is based in Khadbari, Sankhuwasabha. With around 8 years of experience, we focus on quality furniture and custom designs to suit our customers' needs."}
           </p>
-          <button
-            onClick={() => whatsapp()}
-            className="mt-8 rounded-full bg-[#65432c] px-7 py-4 font-semibold text-white hover:bg-[#3f291a]"
-          >
+
+          <button onClick={() => whatsapp()} className="mt-8 rounded-full bg-[#65432c] px-7 py-4 font-semibold text-white hover:bg-[#3f291a]">
             {nepali ? "हामीसँग कुरा गर्नुहोस्" : "Talk to Us"}
           </button>
         </div>
@@ -306,25 +373,23 @@ export default function Home() {
         <p className="text-xs uppercase tracking-[0.3em] text-[#dfc09b]">
           Get In Touch
         </p>
+
         <h2 className="mt-4 text-3xl font-bold">
           {nepali ? "आफ्नो फर्निचर आजै रोज्नुहोस्" : "Let's Furnish Your Home"}
         </h2>
+
         <p className="mt-5 text-[#e5d5c5]">
           Khadbari, Sankhuwasabha, Nepal
         </p>
+
         <p className="mt-2 text-lg">+977 9769713777</p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <button
-            onClick={() => whatsapp()}
-            className="rounded-full bg-[#d3ad7c] px-8 py-4 font-bold text-[#302014] hover:bg-white"
-          >
+          <button onClick={() => whatsapp()} className="rounded-full bg-[#d3ad7c] px-8 py-4 font-bold text-[#302014] hover:bg-white">
             WhatsApp Us
           </button>
-          <a
-            href="tel:+9779769713777"
-            className="rounded-full border border-white px-8 py-4 font-bold hover:bg-white hover:text-[#302014]"
-          >
+
+          <a href="tel:+9779769713777" className="rounded-full border border-white px-8 py-4 font-bold hover:bg-white hover:text-[#302014]">
             Call Now
           </a>
         </div>
@@ -332,8 +397,12 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="bg-[#302014] px-6 py-8 text-center text-sm text-[#e4d4c2]">
-        <h3 className="font-bold tracking-[0.2em]">LANGXONG FURNITURE UDHYOG</h3>
+        <h3 className="font-bold tracking-[0.2em]">
+          LANGXONG FURNITURE UDHYOG
+        </h3>
+
         <p className="mt-3">Khadbari, Sankhuwasabha, Nepal</p>
+
         <a
           href="https://www.facebook.com/profile.php?id=61592342863378"
           target="_blank"
@@ -342,6 +411,13 @@ export default function Home() {
         >
           Facebook Page
         </a>
+        <a
+          href="/login"
+          className="mt-6 block w-fit mx-auto rounded-full border border-[#bca995] px-5 py-2 text-xs font-semibold text-[#e4d4c2] transition hover:bg-[#e4d4c2] hover:text-[#302014]"
+        >
+          Admin Login
+        </a>
+
         <p className="mt-6 text-xs text-[#bca995]">
           © 2026 Langxong Furniture Udhyog. All rights reserved.
         </p>
