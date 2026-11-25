@@ -1,69 +1,360 @@
-import Image from "next/image";
+
+"use client";
+
+import { useState } from "react";
+
+const phone = "9779769713777";
+
+const products = [
+  {
+    name: "Traditional Wooden Sofa",
+    nepali: "परम्परागत काठको सोफा",
+    category: "Sofa",
+    price: 65000,
+    image:
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900",
+  },
+  {
+    name: "Classic Wooden Bed",
+    nepali: "क्लासिक काठको पलङ",
+    category: "Bed",
+    price: 45000,
+    image:
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900",
+  },
+  {
+    name: "Wooden Dining Table",
+    nepali: "काठको डाइनिङ टेबल",
+    category: "Dining",
+    price: 32000,
+    image:
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=900",
+  },
+  {
+    name: "Modern Wooden Wardrobe",
+    nepali: "आधुनिक काठको दराज",
+    category: "Wardrobe",
+    price: 38000,
+    image:
+      "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=900",
+  },
+];
+
+const categories = [
+  { en: "Sofas", ne: "सोफा", icon: "🛋️" },
+  { en: "Beds", ne: "पलङ", icon: "🛏️" },
+  { en: "Dining", ne: "डाइनिङ", icon: "🪑" },
+  { en: "Wardrobes", ne: "दराज", icon: "🚪" },
+  { en: "Doors & Windows", ne: "ढोका तथा झ्याल", icon: "🪵" },
+  { en: "Custom Furniture", ne: "अर्डर अनुसार", icon: "🪚" },
+];
 
 export default function Home() {
+  const [language, setLanguage] = useState<"en" | "ne">("en");
+
+  const nepali = language === "ne";
+
+  const whatsapp = (product?: string) => {
+    const message = product
+      ? `Namaste! I am interested in ${product}. Please provide more details.`
+      : "Namaste! I would like to know more about Langxong Furniture Udhyog.";
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="min-h-screen bg-[#faf7f0] text-[#33251c]">
+      {/* NAVIGATION */}
+      <nav className="sticky top-0 z-50 border-b border-[#e8ddce] bg-[#faf7f0]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
+          <a href="#" className="leading-tight">
+            <h1 className="text-xl font-bold tracking-[0.12em] text-[#603c26]">
+              LANGXONG
+            </h1>
+            <p className="text-[10px] tracking-[0.22em]">
+              FURNITURE UDHYOG
+            </p>
+          </a>
+
+          <div className="hidden items-center gap-7 text-sm font-medium md:flex">
+            <a href="#home" className="hover:text-[#a16d3e]">
+              {nepali ? "गृहपृष्ठ" : "Home"}
+            </a>
+            <a href="#products" className="hover:text-[#a16d3e]">
+              {nepali ? "उत्पादनहरू" : "Products"}
+            </a>
+            <a href="#about" className="hover:text-[#a16d3e]">
+              {nepali ? "हाम्रो बारेमा" : "About"}
+            </a>
+            <a href="#contact" className="hover:text-[#a16d3e]">
+              {nepali ? "सम्पर्क" : "Contact"}
+            </a>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setLanguage(nepali ? "en" : "ne")}
+              className="rounded-full border border-[#b89a7a] px-3 py-2 text-xs font-semibold"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              {nepali ? "EN" : "नेपाली"}
+            </button>
+            <button
+              onClick={() => whatsapp()}
+              className="hidden rounded-full bg-[#65432c] px-4 py-2 text-sm text-white sm:block"
             >
-              Learning
-            </a>{" "}
-            center.
+              WhatsApp
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section
+        id="home"
+        className="relative flex min-h-[580px] items-center bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(35,23,15,.88), rgba(35,23,15,.35)), url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1800')",
+        }}
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 py-24">
+          <div className="max-w-2xl text-white">
+            <p className="mb-5 text-sm uppercase tracking-[0.3em] text-[#e3c49e]">
+              Khadbari · Sankhuwasabha
+            </p>
+
+            <h2 className="text-4xl font-bold leading-tight md:text-6xl">
+              {nepali
+                ? "परम्परागत कला, तपाईंको घरका लागि"
+                : "Bringing Tradition & Quality to Your Home"}
+            </h2>
+
+            <p className="mt-6 max-w-xl text-base leading-8 text-[#eee2d3]">
+              {nepali
+                ? "हाम्रो अनुभव र सीपबाट तयार गरिएका गुणस्तरीय फर्निचरले तपाईंको घरलाई अझ सुन्दर बनाउनुहोस्।"
+                : "Discover beautifully crafted furniture made with care, quality materials and years of experience."}
+            </p>
+
+            <div className="mt-9 flex flex-wrap gap-4">
+              <a
+                href="#products"
+                className="rounded-full bg-[#d3ad7c] px-7 py-4 font-semibold text-[#302014] transition hover:bg-white"
+              >
+                {nepali ? "फर्निचर हेर्नुहोस्" : "Explore Furniture"}
+              </a>
+              <button
+                onClick={() => whatsapp()}
+                className="rounded-full border border-white px-7 py-4 font-semibold transition hover:bg-white hover:text-[#302014]"
+              >
+                {nepali ? "सम्पर्क गर्नुहोस्" : "Contact Us"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST SECTION */}
+      <section className="border-b border-[#e9dfd2] bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-9 text-center sm:grid-cols-3">
+          <div>
+            <p className="text-3xl font-bold text-[#70482b]">8+</p>
+            <p className="mt-2 text-sm text-gray-600">
+              {nepali ? "वर्षको अनुभव" : "Years of Experience"}
+            </p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-[#70482b]">✦</p>
+            <p className="mt-2 text-sm text-gray-600">
+              {nepali ? "गुणस्तरीय सामग्री" : "Quality Materials"}
+            </p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-[#70482b]">✓</p>
+            <p className="mt-2 text-sm text-gray-600">
+              {nepali ? "आफ्नो डिजाइन अनुसार" : "Custom-made Furniture"}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mb-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
+            Explore Our Collection
+          </p>
+          <h2 className="mt-3 text-3xl font-bold">
+            {nepali ? "हाम्रा फर्निचरका प्रकारहरू" : "Shop By Category"}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {categories.map((category) => (
+            <a
+              href="#products"
+              key={category.en}
+              className="rounded-2xl border border-[#e7dac9] bg-white p-6 text-center transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              <span className="text-4xl">{category.icon}</span>
+              <p className="mt-4 text-sm font-semibold">
+                {nepali ? category.ne : category.en}
+              </p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* PRODUCTS */}
+      <section id="products" className="bg-[#f0e9de] py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
+                Our Collection
+              </p>
+              <h2 className="mt-3 text-3xl font-bold">
+                {nepali ? "विशेष फर्निचरहरू" : "Featured Furniture"}
+              </h2>
+            </div>
+            <span className="text-sm text-gray-600">
+              {nepali ? "हाम्रो संग्रह हेर्नुहोस्" : "Discover our collection"}
+            </span>
+          </div>
+
+          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product) => (
+              <article
+                key={product.name}
+                className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="h-64 overflow-hidden bg-[#e6ded2]">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                  />
+                </div>
+
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wider text-[#a27c55]">
+                    {product.category}
+                  </p>
+                  <h3 className="mt-2 text-lg font-bold">
+                    {nepali ? product.nepali : product.name}
+                  </h3>
+
+                  <p className="mt-3 text-xl font-bold text-[#70482b]">
+                    Rs. {product.price.toLocaleString("en-IN")}
+                  </p>
+
+                  <button
+                    onClick={() =>
+                      whatsapp(nepali ? product.nepali : product.name)
+                    }
+                    className="mt-5 w-full rounded-full bg-[#65432c] py-3 text-sm font-semibold text-white transition hover:bg-[#3f291a]"
+                  >
+                    {nepali ? "WhatsApp मा सोध्नुहोस्" : "Inquire on WhatsApp"}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-xs text-gray-600">
+            {nepali
+              ? "नोट: यी परीक्षणका लागि राखिएका नमूना मूल्यहरू हुन्।"
+              : "Demo prices and sample products. Actual inventory and prices will be added by the store owner."}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-24 md:grid-cols-2">
+        <div className="overflow-hidden rounded-3xl">
+          <img
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1000"
+            alt="Furniture interior"
+            className="h-[420px] w-full object-cover"
+          />
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a714c]">
+            About Our Business
+          </p>
+          <h2 className="mt-4 text-4xl font-bold leading-tight">
+            {nepali ? "हाम्रो परिचय" : "Craftsmanship You Can Trust"}
+          </h2>
+          <p className="mt-6 leading-8 text-gray-600">
+            {nepali
+              ? "Langxong Furniture Udhyog खाँदबारी, संखुवासभामा रहेको फर्निचर उद्योग हो। करिब ८ वर्षको अनुभवका साथ हामी गुणस्तरीय फर्निचर तथा ग्राहकको आवश्यकता अनुसारका डिजाइनहरू प्रदान गर्ने लक्ष्य राख्छौँ।"
+              : "Langxong Furniture Udhyog is based in Khadbari, Sankhuwasabha. With around 8 years of experience, we focus on quality furniture and custom designs to suit our customers' needs."}
+          </p>
+          <button
+            onClick={() => whatsapp()}
+            className="mt-8 rounded-full bg-[#65432c] px-7 py-4 font-semibold text-white hover:bg-[#3f291a]"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {nepali ? "हामीसँग कुरा गर्नुहोस्" : "Talk to Us"}
+          </button>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="bg-[#4b3020] px-6 py-20 text-center text-white">
+        <p className="text-xs uppercase tracking-[0.3em] text-[#dfc09b]">
+          Get In Touch
+        </p>
+        <h2 className="mt-4 text-3xl font-bold">
+          {nepali ? "आफ्नो फर्निचर आजै रोज्नुहोस्" : "Let's Furnish Your Home"}
+        </h2>
+        <p className="mt-5 text-[#e5d5c5]">
+          Khadbari, Sankhuwasabha, Nepal
+        </p>
+        <p className="mt-2 text-lg">+977 9769713777</p>
+
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <button
+            onClick={() => whatsapp()}
+            className="rounded-full bg-[#d3ad7c] px-8 py-4 font-bold text-[#302014] hover:bg-white"
           >
-            Documentation
+            WhatsApp Us
+          </button>
+          <a
+            href="tel:+9779769713777"
+            className="rounded-full border border-white px-8 py-4 font-bold hover:bg-white hover:text-[#302014]"
+          >
+            Call Now
           </a>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-[#302014] px-6 py-8 text-center text-sm text-[#e4d4c2]">
+        <h3 className="font-bold tracking-[0.2em]">LANGXONG FURNITURE UDHYOG</h3>
+        <p className="mt-3">Khadbari, Sankhuwasabha, Nepal</p>
+        <a
+          href="https://www.facebook.com/profile.php?id=61592342863378"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block underline"
+        >
+          Facebook Page
+        </a>
+        <p className="mt-6 text-xs text-[#bca995]">
+          © 2026 Langxong Furniture Udhyog. All rights reserved.
+        </p>
+      </footer>
+
+      {/* FLOATING WHATSAPP */}
+      <button
+        onClick={() => whatsapp()}
+        aria-label="Contact us on WhatsApp"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-2xl text-white shadow-xl transition hover:scale-110"
+      >
+        ☎
+      </button>
+    </main>
   );
 }
