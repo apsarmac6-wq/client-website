@@ -63,7 +63,7 @@ if (!admin) {
         <div className="text-center mb-8">
           <div className="text-4xl mb-3">🪵</div>
           <h1 className="text-2xl font-bold text-[#593b25]">
-            Langxong Furniture Udhyog
+            Langchoong Furniture Udhyog
           </h1>
           <p className="mt-2 text-gray-500">
             सञ्चालक लगइन

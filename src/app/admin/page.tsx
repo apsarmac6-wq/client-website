@@ -383,7 +383,7 @@ export default function AdminDashboard() {
     <main className="min-h-screen bg-[#f5f0e7] p-4 text-gray-900 sm:p-8">
       <div className="mx-auto max-w-6xl">
         <h1 className="text-3xl font-bold text-[#593b25]">
-          Langxong Furniture Udhyog
+          Langchoong Furniture Udhyog
         </h1>
 
         <p className="mt-2 text-gray-600">

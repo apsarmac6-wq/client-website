@@ -21,7 +21,7 @@ type Product = {
   }[];
 };
 
-const phone = "9779769713777";
+const phone = "9779864996189";
 
 const categories = [
   { en: "Sofas", ne: "सोफा", icon: "🛋️" },
@@ -81,7 +81,7 @@ export default function Home() {
   const whatsapp = (product?: string) => {
     const message = product
       ? `Namaste! I am interested in ${product}. Please provide more details.`
-      : "Namaste! I would like to know more about Langxong Furniture Udhyog.";
+      : "Namaste! I would like to know more about Langchoong Furniture Udhyog.";
 
     window.open(
       `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
@@ -97,7 +97,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
           <a href="#" className="leading-tight">
             <h1 className="text-xl font-bold tracking-[0.12em] text-[#603c26]">
-              LANGXONG
+              LANGCHOONG
             </h1>
             <p className="text-[10px] tracking-[0.22em]">
               FURNITURE UDHYOG
@@ -358,8 +358,8 @@ export default function Home() {
 
           <p className="mt-6 leading-8 text-gray-600">
             {nepali
-              ? "Langxong Furniture Udhyog खाँदबारी, संखुवासभामा रहेको फर्निचर उद्योग हो। करिब ८ वर्षको अनुभवका साथ हामी गुणस्तरीय फर्निचर तथा ग्राहकको आवश्यकता अनुसारका डिजाइनहरू प्रदान गर्ने लक्ष्य राख्छौँ।"
-              : "Langxong Furniture Udhyog is based in Khadbari, Sankhuwasabha. With around 8 years of experience, we focus on quality furniture and custom designs to suit our customers' needs."}
+              ? "Langchoong Furniture Udhyog खाँदबारी, संखुवासभामा रहेको फर्निचर उद्योग हो। करिब ८ वर्षको अनुभवका साथ हामी गुणस्तरीय फर्निचर तथा ग्राहकको आवश्यकता अनुसारका डिजाइनहरू प्रदान गर्ने लक्ष्य राख्छौँ।"
+              : "Langchoong Furniture Udhyog is based in Khadbari, Sankhuwasabha. With around 8 years of experience, we focus on quality furniture and custom designs to suit our customers' needs."}
           </p>
 
           <button onClick={() => whatsapp()} className="mt-8 rounded-full bg-[#65432c] px-7 py-4 font-semibold text-white hover:bg-[#3f291a]">
@@ -382,7 +382,7 @@ export default function Home() {
           Khadbari, Sankhuwasabha, Nepal
         </p>
 
-        <p className="mt-2 text-lg">+977 9769713777</p>
+        <p className="mt-2 text-lg">+977 9864996189</p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <button onClick={() => whatsapp()} className="rounded-full bg-[#d3ad7c] px-8 py-4 font-bold text-[#302014] hover:bg-white">
@@ -398,7 +398,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="bg-[#302014] px-6 py-8 text-center text-sm text-[#e4d4c2]">
         <h3 className="font-bold tracking-[0.2em]">
-          LANGXONG FURNITURE UDHYOG
+          LANGCHOONG FURNITURE UDHYOG
         </h3>
 
         <p className="mt-3">Khadbari, Sankhuwasabha, Nepal</p>
@@ -419,7 +419,7 @@ export default function Home() {
         </a>
 
         <p className="mt-6 text-xs text-[#bca995]">
-          © 2026 Langxong Furniture Udhyog. All rights reserved.
+          © 2026 LangChoong Furniture Udhyog. All rights reserved.
         </p>
       </footer>
 
